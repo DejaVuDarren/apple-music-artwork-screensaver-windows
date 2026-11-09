@@ -11,6 +11,10 @@
 
 屏保不提供点击封面播放功能。Apple Music 云端有但尚未缓存在本机的封面不会显示。
 
+## 下载已编译程序
+
+前往 [Releases](https://github.com/DejaVuDarren/apple-music-artwork-screensaver-windows/releases/latest) 下载 Windows x64 安装包。推荐下载 ZIP，解压后按包内说明安装；也可直接下载 `.scr` 文件。运行屏保需要 Microsoft Edge WebView2 Runtime。
+
 ## 编译
 
 需要 Windows、.NET SDK 和 WebView2 Runtime。在仓库根目录运行：
