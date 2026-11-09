@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.pdb
+*.scr
+*.exe
+*.zip
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.musicdb
+artwork/
+artwork_originals/
+
