@@ -1,4 +1,4 @@
-const displayMode = typeof window.displayMode !== 'undefined' ? window.displayMode : 2; // 0=Music, 1=Movie, 2=Mixed, 3=Books, 4=All Mixed
+﻿const displayMode = typeof window.displayMode !== 'undefined' ? window.displayMode : 2; // 0=Music, 1=Movie, 2=Mixed, 3=Books, 4=All Mixed
 const animationType = typeof window.animationType !== 'undefined' ? window.animationType : 0; // 0=Flip, 1=Flow
 const bookLanguage = typeof window.bookLanguage !== 'undefined' ? window.bookLanguage : 0; // 0=Chinese, 1=All
 
@@ -473,4 +473,3 @@ init();
 window.addEventListener('keydown', () => { if (window.chrome && window.chrome.webview) window.chrome.webview.postMessage('exit'); });
 window.addEventListener('mousedown', () => { if (window.chrome && window.chrome.webview) window.chrome.webview.postMessage('exit'); });
 window.addEventListener('mousemove', () => { if (window.chrome && window.chrome.webview) window.chrome.webview.postMessage('mousemove'); });
-

@@ -30,4 +30,3 @@ dotnet publish .\MosaicScreensaver\MosaicScreensaver.csproj -c Release -r win-x6
 ## 来源与许可
 
 原项目为 [forestslin/mosaic-screensaver-windows](https://github.com/forestslin/mosaic-screensaver-windows)，其 README 声明采用 MIT License。本项目保留原项目来源说明，并按 MIT License 发布修改后的源码。参见 [LICENSE](LICENSE)。
-

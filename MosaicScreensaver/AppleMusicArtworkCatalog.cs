@@ -76,4 +76,3 @@ internal static class AppleMusicArtworkCatalog
     [DllImport("winsqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern int sqlite3_close(IntPtr db);
 }
-

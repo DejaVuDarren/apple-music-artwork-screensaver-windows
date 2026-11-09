@@ -27,4 +27,3 @@ internal static class WindowsScreenSaverSecurity
         IntPtr window, uint message, IntPtr wParam, string lParam,
         uint flags, uint timeout, out IntPtr result);
 }
-
