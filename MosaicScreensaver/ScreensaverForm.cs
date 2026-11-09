@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
@@ -11,6 +12,8 @@ namespace MosaicScreensaver
 {
     public partial class ScreensaverForm : Form
     {
+        private static int exitRequested;
+
         [DllImport("user32.dll")]
         static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
@@ -162,14 +165,14 @@ namespace MosaicScreensaver
                     string msg = args.TryGetWebMessageAsString();
                     if (msg == "exit")
                     {
-                        Application.Exit();
+                        ExitScreensaver();
                     }
                     else if (msg == "mousemove")
                     {
                         if (Math.Abs(mouseLocation.X - Cursor.Position.X) > 5 ||
                             Math.Abs(mouseLocation.Y - Cursor.Position.Y) > 5)
                         {
-                            Application.Exit();
+                            ExitScreensaver();
                         }
                     }
                 };
@@ -206,7 +209,7 @@ namespace MosaicScreensaver
                 {
                     if (Cursor.Position != mouseLocation)
                     {
-                        Application.Exit();
+                        ExitScreensaver();
                     }
                 };
                 exitTimer.Start();
@@ -220,7 +223,7 @@ namespace MosaicScreensaver
                 if (Math.Abs(mouseLocation.X - Cursor.Position.X) > 5 ||
                     Math.Abs(mouseLocation.Y - Cursor.Position.Y) > 5)
                 {
-                    Application.Exit();
+                    ExitScreensaver();
                 }
             }
         }
@@ -228,13 +231,32 @@ namespace MosaicScreensaver
         private void ScreensaverForm_MouseClick(object sender, MouseEventArgs e)
         {
             if (!previewMode && !diagnosticHold)
-                Application.Exit();
+                ExitScreensaver();
         }
 
         private void ScreensaverForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (!previewMode && !diagnosticHold)
-                Application.Exit();
+                ExitScreensaver();
+        }
+
+        private void ExitScreensaver()
+        {
+            if (Interlocked.Exchange(ref exitRequested, 1) != 0) return;
+
+            // The parent Windows settings dialog can write its earlier checkbox
+            // state after our settings window closes. The app's saved choice also
+            // locks the workstation on normal full-screen exits.
+            if (SettingsManager.LoadRequireSignIn()
+                && !WindowsScreenSaverSecurity.LockWorkStationOnExit())
+            {
+                MessageBox.Show("无法锁定 Windows。请使用 Win+L 手动锁定后再检查系统设置。",
+                    "屏保登录验证", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Interlocked.Exchange(ref exitRequested, 0);
+                return;
+            }
+
+            Application.Exit();
         }
 
         private void InitializeComponent()

@@ -74,7 +74,7 @@ public sealed class SettingsForm : Form
         };
         security.Controls.Add(requireSignIn);
         security.Controls.Add(new Label {
-            Text = "使用 Windows 密码、PIN 或 Hello。此设置由 Windows 管理。",
+            Text = "退出屏保时锁定 Windows，并同步系统的屏保登录选项。",
             Location = new Point(18, 70), Size = new Size(300, 65)
         });
         Controls.Add(security);
@@ -95,7 +95,7 @@ public sealed class SettingsForm : Form
         else flip.Checked = true;
         rows.SelectedIndex = SettingsManager.LoadRowCount();
         speed.Value = SettingsManager.LoadFlipSpeed();
-        requireSignIn.Checked = WindowsScreenSaverSecurity.IsEnabled();
+        requireSignIn.Checked = SettingsManager.LoadRequireSignIn();
     }
 
     private void SaveSettings()
@@ -104,8 +104,17 @@ public sealed class SettingsForm : Form
         SettingsManager.SaveAnimationType(flow.Checked ? 1 : 0);
         SettingsManager.SaveRowCount(rows.SelectedIndex);
         SettingsManager.SaveFlipSpeed(speed.Value);
-        if (WindowsScreenSaverSecurity.IsEnabled() != requireSignIn.Checked)
+        SettingsManager.SaveRequireSignIn(requireSignIn.Checked);
+        try
+        {
             WindowsScreenSaverSecurity.SetEnabled(requireSignIn.Checked);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                "本屏保的退出锁定选项已保存，但 Windows 系统选项未能同步。\n" + ex.Message,
+                "屏保登录验证", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
         Close();
     }
 }

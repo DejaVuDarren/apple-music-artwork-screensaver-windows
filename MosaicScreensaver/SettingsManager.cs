@@ -13,6 +13,24 @@ namespace MosaicScreensaver
         private const string AnimationTypeValueName = "AnimationType";
         private const string BookLanguageValueName = "BookLanguage";
         private const string RowCountValueName = "RowCount";
+        private const string RequireSignInValueName = "RequireSignIn";
+
+        public static bool LoadRequireSignIn()
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath);
+            var saved = key?.GetValue(RequireSignInValueName);
+            if (saved is not null)
+                return int.TryParse(saved.ToString(), out int value) && value != 0;
+
+            // Existing installs used the Windows preference without an app-specific value.
+            return WindowsScreenSaverSecurity.IsEnabled();
+        }
+
+        public static void SaveRequireSignIn(bool enabled)
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryKeyPath);
+            key?.SetValue(RequireSignInValueName, enabled ? 1 : 0, RegistryValueKind.DWord);
+        }
 
         public static int LoadRowCount()
         {
