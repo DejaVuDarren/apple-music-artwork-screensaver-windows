@@ -457,6 +457,13 @@ window.addEventListener('resize', () => {
 
 // Instant startup - No loading delay!
 function init() {
+    if (musicArtworks.length === 0) {
+        const message = document.createElement('div');
+        message.className = 'empty-artworks';
+        message.textContent = '所选来源没有找到专辑封面。请打开屏保设置检查 Apple Music 缓存或图片文件夹。';
+        document.body.appendChild(message);
+        return;
+    }
     if (animationType === 1) {
         initFlowGrid();
     } else {

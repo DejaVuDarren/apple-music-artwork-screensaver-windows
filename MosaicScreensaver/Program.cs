@@ -34,7 +34,7 @@ static class Program
                 // Preview mode
                 if (secondArgument == null)
                 {
-                    MessageBox.Show("Sorry, but the expected window handle was not provided.", "Screensaver", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("缺少预览窗口句柄。", "类MAC专辑封面屏保", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
@@ -50,7 +50,7 @@ static class Program
             else
             {
                 // Undefined argument
-                MessageBox.Show("Sorry, but the command line argument \"" + firstArgument + "\" is not valid.", "Screensaver", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("无效的命令行参数：" + firstArgument, "类MAC专辑封面屏保", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
         else

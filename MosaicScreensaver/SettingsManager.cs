@@ -14,6 +14,35 @@ namespace MosaicScreensaver
         private const string BookLanguageValueName = "BookLanguage";
         private const string RowCountValueName = "RowCount";
         private const string RequireSignInValueName = "RequireSignIn";
+        private const string ArtworkSourceValueName = "ArtworkSource";
+        private const string ArtworkFolderValueName = "ArtworkFolder";
+
+        // 0 = Apple Music cache, 1 = selected folder, 2 = both.
+        public static int LoadArtworkSource()
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath);
+            return int.TryParse(key?.GetValue(ArtworkSourceValueName)?.ToString(), out int value)
+                && value >= 0 && value <= 2 ? value : 0;
+        }
+
+        public static void SaveArtworkSource(int source)
+        {
+            if (source < 0 || source > 2) throw new ArgumentOutOfRangeException(nameof(source));
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryKeyPath);
+            key?.SetValue(ArtworkSourceValueName, source, RegistryValueKind.DWord);
+        }
+
+        public static string LoadArtworkFolder()
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath);
+            return key?.GetValue(ArtworkFolderValueName) as string ?? string.Empty;
+        }
+
+        public static void SaveArtworkFolder(string folder)
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryKeyPath);
+            key?.SetValue(ArtworkFolderValueName, folder, RegistryValueKind.String);
+        }
 
         public static bool LoadRequireSignIn()
         {

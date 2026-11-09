@@ -87,14 +87,32 @@ namespace MosaicScreensaver
                 var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder, options);
                 await webView.EnsureCoreWebView2Async(env);
 
-                // Map the live Apple Music artwork cache and pass its indexed album covers
-                // to the page. Read this afresh at every screensaver launch.
-                var (artworkFolder, localArtworks) = AppleMusicArtworkCatalog.Load();
-                if (Directory.Exists(artworkFolder))
+                // Read only the selected source at each launch. Each local folder
+                // gets its own virtual host; no private file path is sent to the page.
+                int artworkSource = SettingsManager.LoadArtworkSource();
+                var localArtworks = new List<string>();
+                if (artworkSource is 0 or 2)
                 {
-                    webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
-                        "applemusic.local", artworkFolder,
-                        CoreWebView2HostResourceAccessKind.Allow);
+                    var (appleFolder, appleArtworks) = AppleMusicArtworkCatalog.Load();
+                    if (Directory.Exists(appleFolder))
+                    {
+                        webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                            "applemusic.local", appleFolder,
+                            CoreWebView2HostResourceAccessKind.Allow);
+                    }
+                    localArtworks.AddRange(appleArtworks);
+                }
+                if (artworkSource is 1 or 2)
+                {
+                    string folder = SettingsManager.LoadArtworkFolder();
+                    var folderArtworks = FolderArtworkCatalog.Load(folder);
+                    if (folderArtworks.Count > 0)
+                    {
+                        webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                            "userart.local", folder,
+                            CoreWebView2HostResourceAccessKind.Allow);
+                        localArtworks.AddRange(folderArtworks);
+                    }
                 }
                 await webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(
                     "window.localMusicArtworks = " + JsonSerializer.Serialize(localArtworks) + ";");
@@ -130,7 +148,7 @@ namespace MosaicScreensaver
                 if (!File.Exists(Path.Combine(webDir, "index.html")))
                 {
                     // A single-file .NET publish extracts content under the user's temp folder.
-                    var extractedRoot = Path.Combine(Path.GetTempPath(), ".net", "MosaicScreensaver");
+                    var extractedRoot = Path.Combine(Path.GetTempPath(), ".net", "LeiMacAlbumScreensaver");
                     if (Directory.Exists(extractedRoot))
                     {
                         var extractedWeb = Directory.GetDirectories(extractedRoot)
@@ -269,7 +287,7 @@ namespace MosaicScreensaver
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "ScreensaverForm";
-            this.Text = "MosaicScreensaver";
+            this.Text = "类MAC专辑封面屏保";
             this.Load += new System.EventHandler(this.ScreensaverForm_Load);
             this.ResumeLayout(false);
         }
