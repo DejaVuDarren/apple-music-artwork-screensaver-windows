@@ -6,6 +6,12 @@
 
 > **原作者与项目贡献：** 本软件基于 [forestslin 的 mosaic-screensaver-windows v5.0.15](https://github.com/forestslin/mosaic-screensaver-windows/tree/v5.0.15) 开发。原作者及其贡献者创建了 Windows 屏保程序、封面墙布局、3D 翻转与流动动画、多显示器显示和 WebView2 展示框架。本项目保留这些基础实现，并在其上增加本地 Apple Music 缓存读取、可切换封面来源、行数选择和退出时登录验证。感谢原作者公开源码与 MIT 许可。
 
+## 实际运行预览
+
+![类MAC专辑封面屏保横屏运行效果，使用本机 Apple Music 已缓存的专辑封面](docs/preview-apple-music.jpg)
+
+图为本机实际运行时的横屏截图，封面来自当前用户已缓存的 Apple Music 资料库；每次启动和动画播放时，画面会有所不同。
+
 ## 下载与安装
 
 1. 打开 [最新版发行页](https://github.com/DejaVuDarren/apple-music-artwork-screensaver-windows/releases/latest)，在 **Assets / 资源** 中下载名称包含 `win-x64.zip` 的文件。ZIP 内有 `.scr` 和安装说明。也可以直接下载 `.scr`。不要只下载 GitHub 自动生成的 `Source code (zip)`：它只有源码，没有可用的屏保程序。
